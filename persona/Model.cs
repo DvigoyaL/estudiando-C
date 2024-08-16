@@ -1,11 +1,17 @@
-﻿using Microsoft.Data.Sqlite;
+﻿using System.Data.SQLite;
 
 public class Database
 {
-    // Campo estático para almacenar la única instancia de la clase Database
     private static Database? _instance;
+    private readonly SQLiteConnection _connection;
 
-    // Propiedad que devuelve la instancia única de la clase Database
+    private Database()
+    {
+        _connection = new SQLiteConnection("Data Source=miBaseDeDatos.db");
+        _connection.Open();
+        CrearTablas();
+    }
+
     public static Database Instance
     {
         get
@@ -18,29 +24,56 @@ public class Database
         }
     }
 
-    // Conexión SQLite
-    private readonly SqliteConnection _connection;
-
-    // Constructor privado para evitar instancias externas
-    private Database()
-    {
-        // Inicializa la conexión
-        _connection = new SqliteConnection("Data Source=miBaseDeDatos.db");
-        _connection.Open();
-    }
-
-    // Método para obtener la conexión
-    public SqliteConnection GetConnection()
+    public SQLiteConnection GetConnection()
     {
         return _connection;
     }
 
-    // Método para cerrar la conexión si es necesario
-    public void CloseConnection()
+    private void CrearTablas()
     {
-        if (_connection.State == System.Data.ConnectionState.Open)
+        using (var command = _connection.CreateCommand())
         {
-            _connection.Close();
+            command.CommandText = @"
+                CREATE TABLE IF NOT EXISTS Personas (
+                    Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    Nombre TEXT NOT NULL,
+                    Edad INTEGER NOT NULL
+                );
+
+                CREATE TABLE IF NOT EXISTS Empleados (
+                    Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    Nombre TEXT NOT NULL,
+                    Edad INTEGER NOT NULL,
+                    Cargo TEXT NOT NULL,
+                    Sueldo REAL NOT NULL,
+                    FOREIGN KEY(Id) REFERENCES Personas(Id)
+                );
+
+                CREATE TABLE IF NOT EXISTS Estudiantes (
+                    Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    Nombre TEXT NOT NULL,
+                    Edad INTEGER NOT NULL,
+                    Curso TEXT NOT NULL,
+                    Colegio TEXT NOT NULL,
+                    FOREIGN KEY(Id) REFERENCES Personas(Id)
+                );
+                CREATE TABLE IF NOT EXISTS Archivos (
+                    Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    NombreArchivo TEXT NOT NULL,
+                    TipoArchivo TEXT NOT NULL,
+                    Archivo BLOB NOT NULL
+                );
+            ";
+            command.ExecuteNonQuery();
         }
     }
 }
+
+// Método para cerrar la conexión si es necesario
+/*public void CloseConnection()
+{
+    if (_connection.State == System.Data.ConnectionState.Open)
+    {
+        _connection.Close();
+    }
+}*/

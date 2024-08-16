@@ -11,9 +11,21 @@
         this.age = age;
     }
 
+    public int getId() { return id; }
+
     public string Name
     {
         get { return name; }
         set { name = value; }
+    }
+    public int Id
+    {
+        get { return id; }
+    }
+
+    public int Age
+    {
+        get { return age; }
+        set { age = value; }
     }
 }

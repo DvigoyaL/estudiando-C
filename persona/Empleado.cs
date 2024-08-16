@@ -9,8 +9,30 @@
         this.sueldo = sueldo;
     }
 
+    public string Cargo
+    {
+        set { this.cargo = value; }
+        get { return cargo; }
+    }
+
+    public double Sueldo
+    {
+        set { sueldo = value; }
+        get { return sueldo; }
+    }
+
+    public string Nombre
+    {
+        get { return Name; }
+    }
+
+    public int Edad
+    {
+        get { return Age; }
+    }
+
     public void mostrarInfo()
     {
-        Console.WriteLine($"Nombre {Name} sueldo del empleado {sueldo} y cargo {cargo} ");
+        Console.WriteLine($"Nombre {Name} numero {Id} sueldo del empleado {sueldo} y cargo {cargo} ");
     }
 }

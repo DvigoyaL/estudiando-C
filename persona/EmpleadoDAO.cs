@@ -1,14 +1,14 @@
-﻿using Microsoft.Data.Sqlite;
+﻿using System.Data.SQLite;
 using System.Collections.Generic;
 
 public class EmpleadoDAO
 {
-    private readonly SqliteConnection _connection;
+    private readonly SQLiteConnection _connection;
 
     // Constructor que obtiene la conexión desde la clase Database (Singleton)
-    public EmpleadoDAO()
+    public EmpleadoDAO(SQLiteConnection connection)
     {
-        _connection = Database.Instance.GetConnection();
+        _connection = connection;
     }
 
     // Crear un nuevo empleado en la base de datos
@@ -55,7 +55,7 @@ public class EmpleadoDAO
                 }
             }
         }
-        return null; // Si no se encuentra el empleado
+        return null; 
     }
 
     // Leer todos los empleados
@@ -99,7 +99,7 @@ public class EmpleadoDAO
             command.Parameters.AddWithValue("$edad", empleado.Age);
             command.Parameters.AddWithValue("$cargo", empleado.Cargo);
             command.Parameters.AddWithValue("$sueldo", empleado.Sueldo);
-            command.Parameters.AddWithValue("$id", empleado.Id);
+            command.Parameters.AddWithValue("$id", empleado.getId());
 
             command.ExecuteNonQuery();
         }
